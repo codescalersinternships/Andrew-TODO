@@ -37,6 +37,7 @@ func get_todo(context *gin.Context) {
 	todo, err := get_todo_by_id(id)
 	if err != nil {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+		return
 	}
 	context.IndentedJSON(http.StatusOK, todo)
 }
@@ -46,6 +47,7 @@ func toggle_todo_completed(context *gin.Context) {
 	todo, err := get_todo_by_id(id)
 	if err != nil {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+		return
 	}
 	todo.Completed = !todo.Completed
 	context.IndentedJSON(http.StatusOK, todo)
@@ -58,6 +60,21 @@ func delete_todo(context *gin.Context) {
 			copy(todos[i:], todos[i+1:])
 			todos = todos[:len(todos)-1]
 			context.IndentedJSON(http.StatusOK, gin.H{"message": "todo is succesfully deleted"})
+			return
+		}
+	}
+	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+}
+func update_todo_item(context *gin.Context) {
+	id := context.Param("id")
+	for i, _ := range todos {
+		if todos[i].ID == id {
+			var item string
+			if err := context.BindJSON(&item); err != nil {
+				return
+			}
+			todos[i].Item = item
+			context.IndentedJSON(http.StatusOK, gin.H{"message": "item is updated succesfully"})
 			return
 		}
 	}
@@ -81,5 +98,6 @@ func main() {
 	router.PATCH("/todos/:id", toggle_todo_completed)
 	router.POST("/todos", add_todo)
 	router.DELETE("/todos/:id", delete_todo)
+	router.PUT("/todos/:id", update_todo_item)
 	router.Run("localhost:9090")
 }
