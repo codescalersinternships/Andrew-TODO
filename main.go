@@ -65,7 +65,7 @@ func delete_todo(context *gin.Context) {
 	}
 	var new = todo{ID: id}
 	res := DB.Delete(&new)
-	if res.Error != nil {
+	if res.RowsAffected == 0 {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
@@ -79,8 +79,8 @@ func toggle_todo_completed(context *gin.Context) {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad request id should be num"})
 	}
 	var res_todo todo
-	DB.First(&res_todo, id)
-	if res_todo.Item == "" {
+	res := DB.First(&res_todo, id)
+	if res.RowsAffected == 0 {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
@@ -95,8 +95,8 @@ func update_todo_item(context *gin.Context) {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad request id should be num"})
 	}
 	var res_todo todo
-	DB.First(&res_todo, id)
-	if res_todo.Item == "" {
+	res := DB.First(&res_todo, id)
+	if res.RowsAffected == 0 {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
