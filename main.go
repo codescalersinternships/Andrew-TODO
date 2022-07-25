@@ -1,98 +1,118 @@
 package main
 
 import (
-	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
+const DBFILE = "./database/todos.db"
+
+var DB, error = gorm.Open(sqlite.Open(DBFILE), &gorm.Config{})
+
 type todo struct {
-	ID        string `jason:"id"`
+	ID        int    `gorm:"PRIMARY_KEY;AUTO_INCREMENT;NOT NULL" jason:"id"`
 	Item      string `jason:"item"`
 	Completed bool   `jason:"completed"`
 }
 
-var todos = []todo{
-	{ID: "1", Item: "do homeword", Completed: false},
-	{ID: "2", Item: "exercise", Completed: false},
-	{ID: "3", Item: "drink water", Completed: false},
-}
-
 func get_todos(context *gin.Context) {
-	context.IndentedJSON(http.StatusOK, todos)
+	var all_todos []todo
+	DB.Find(&all_todos)
+	context.IndentedJSON(http.StatusOK, all_todos)
 }
 
 func add_todo(context *gin.Context) {
-	var new_todo todo
-	if err := context.BindJSON(&new_todo); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "wrong entry of data"})
+	var new_todo_item string
+	if err := context.BindJSON(&new_todo_item); err != nil {
 		return
 	}
-	todos = append(todos, new_todo)
-	context.IndentedJSON(http.StatusCreated, todos)
+	if len(new_todo_item) == 0 {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "item cannot be empty"})
+		return
+	}
+	var new_todo todo
+	new_todo.Item = new_todo_item
+	DB.Create(&new_todo)
+	context.IndentedJSON(http.StatusOK, gin.H{"message": "todo is added succesfully"})
 }
 
 func get_todo(context *gin.Context) {
-	id := context.Param("id")
-	todo, err := get_todo_by_id(id)
+	id_s := context.Param("id")
+	id, err := strconv.Atoi(id_s)
 	if err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad request id should be number"})
+		return
+	}
+	var res_todo todo
+	res := DB.First(&res_todo, id)
+	if res.Error != nil {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
-	context.IndentedJSON(http.StatusOK, todo)
+	context.IndentedJSON(http.StatusOK, res_todo)
+}
+
+func delete_todo(context *gin.Context) {
+	id_s := context.Param("id")
+	id, err := strconv.Atoi(id_s)
+	if err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad request id should be num"})
+		return
+	}
+	var new = todo{ID: id}
+	res := DB.Delete(&new)
+	if res.Error != nil {
+		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+		return
+	}
+	context.IndentedJSON(http.StatusOK, gin.H{"message": "item is deleted succesfully"})
 }
 
 func toggle_todo_completed(context *gin.Context) {
-	id := context.Param("id")
-	todo, err := get_todo_by_id(id)
+	id_s := context.Param("id")
+	id, err := strconv.Atoi(id_s)
 	if err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad request id should be num"})
+	}
+	var res_todo todo
+	DB.First(&res_todo, id)
+	if res_todo.Item == "" {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
-	todo.Completed = !todo.Completed
-	context.IndentedJSON(http.StatusOK, todo)
+	DB.Model(&todo{}).Where("id = ?", id).Update("completed", !res_todo.Completed)
+	context.IndentedJSON(http.StatusOK, gin.H{"message": "todo status is changed"})
 }
-func delete_todo(context *gin.Context) {
-	id := context.Param("id")
-	for i, todo := range todos {
-		if id == todo.ID {
 
-			copy(todos[i:], todos[i+1:])
-			todos = todos[:len(todos)-1]
-			context.IndentedJSON(http.StatusOK, gin.H{"message": "todo is succesfully deleted"})
-			return
-		}
-	}
-	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
-}
 func update_todo_item(context *gin.Context) {
-	id := context.Param("id")
-	for i := range todos {
-		if todos[i].ID == id {
-			var item string
-			if err := context.BindJSON(&item); err != nil {
-				return
-			}
-			todos[i].Item = item
-			context.IndentedJSON(http.StatusOK, gin.H{"message": "item is updated succesfully"})
-			return
-		}
+	id_s := context.Param("id")
+	id, err := strconv.Atoi(id_s)
+	if err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad request id should be num"})
 	}
-	context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
-
-}
-
-func get_todo_by_id(id string) (*todo, error) {
-	for i, to_do := range todos {
-		if to_do.ID == id {
-			return &todos[i], nil
-		}
+	var res_todo todo
+	DB.First(&res_todo, id)
+	if res_todo.Item == "" {
+		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+		return
 	}
-	return nil, errors.New("invalid ID")
+	var item string
+	if err := context.BindJSON(&item); err != nil {
+		return
+	}
+	DB.Model(&todo{}).Where("id = ?", id).Update("item", item)
+	context.IndentedJSON(http.StatusOK, gin.H{"message": "item is updated succesfully"})
 }
 
 func main() {
+	if error != nil {
+		panic("couldn't connect to database")
+	}
+	DB.AutoMigrate(&todo{})
 	router := gin.Default()
 	router.GET("/todos", get_todos)
 	router.GET("/todos/:id", get_todo)
@@ -100,5 +120,6 @@ func main() {
 	router.POST("/todos", add_todo)
 	router.DELETE("/todos/:id", delete_todo)
 	router.PUT("/todos/:id", update_todo_item)
-	router.Run("localhost:8080")
+	router.Static("/swaggerui/", "swagger_ui")
+	router.Run(":8080")
 }
