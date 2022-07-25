@@ -26,6 +26,7 @@ func get_todos(context *gin.Context) {
 func add_todo(context *gin.Context) {
 	var new_todo todo
 	if err := context.BindJSON(&new_todo); err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "wrong entry of data"})
 		return
 	}
 	todos = append(todos, new_todo)
@@ -67,7 +68,7 @@ func delete_todo(context *gin.Context) {
 }
 func update_todo_item(context *gin.Context) {
 	id := context.Param("id")
-	for i, _ := range todos {
+	for i := range todos {
 		if todos[i].ID == id {
 			var item string
 			if err := context.BindJSON(&item); err != nil {
@@ -99,5 +100,5 @@ func main() {
 	router.POST("/todos", add_todo)
 	router.DELETE("/todos/:id", delete_todo)
 	router.PUT("/todos/:id", update_todo_item)
-	router.Run("localhost:9090")
+	router.Run("localhost:8080")
 }
