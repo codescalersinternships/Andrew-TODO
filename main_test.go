@@ -68,3 +68,72 @@ func TestGetTodo(t *testing.T) {
 		}
 	})
 }
+
+func TestDeleteTodo(t *testing.T) {
+	t.Run("testing delete todo  (bad request) with invalid id", func(t *testing.T) {
+		router := SetUpRouter()
+		req, _ := http.NewRequest(http.MethodDelete, "/todos/invalid", nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, req)
+		status := response.Code
+		if status != http.StatusNotFound {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusNotFound)
+		}
+	})
+	t.Run("testing delete todo  (status not found) with non existent id ", func(t *testing.T) {
+		router := SetUpRouter()
+		req, _ := http.NewRequest(http.MethodDelete, "/todos/-10", nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, req)
+		status := response.Code
+		if status != http.StatusNotFound {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusNotFound)
+		}
+	})
+}
+
+func TestUpdateTodo(t *testing.T) {
+	t.Run("testing update todo  (bad request) with invalid id", func(t *testing.T) {
+		router := SetUpRouter()
+		req, _ := http.NewRequest(http.MethodPut, "/todos/invalid", nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, req)
+		status := response.Code
+		if status != http.StatusNotFound {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusNotFound)
+		}
+	})
+	t.Run("testing update todo  (status not found) with non existent id ", func(t *testing.T) {
+		router := SetUpRouter()
+		req, _ := http.NewRequest(http.MethodPut, "/todos/-10", nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, req)
+		status := response.Code
+		if status != http.StatusNotFound {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusNotFound)
+		}
+	})
+}
+
+func TestToggleTodo(t *testing.T) {
+	t.Run("testing toggle todo  (bad request) with invalid id", func(t *testing.T) {
+		router := SetUpRouter()
+		req, _ := http.NewRequest(http.MethodPatch, "/todos/invalid", nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, req)
+		status := response.Code
+		if status != http.StatusNotFound {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusNotFound)
+		}
+	})
+	t.Run("testing toggle todo  (status not found) with non existent id ", func(t *testing.T) {
+		router := SetUpRouter()
+		req, _ := http.NewRequest(http.MethodPatch, "/todos/-10", nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, req)
+		status := response.Code
+		if status != http.StatusNotFound {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusNotFound)
+		}
+	})
+}
