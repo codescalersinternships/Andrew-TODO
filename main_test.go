@@ -95,7 +95,7 @@ func TestDeleteTodo(t *testing.T) {
 func TestUpdateTodo(t *testing.T) {
 	t.Run("testing update todo  (bad request) with invalid id", func(t *testing.T) {
 		router := SetUpRouter()
-		req, _ := http.NewRequest(http.MethodPut, "/todos/invalid", nil)
+		req, _ := http.NewRequest(http.MethodPut, "/todos/invalidd", nil)
 		response := httptest.NewRecorder()
 		router.ServeHTTP(response, req)
 		status := response.Code
