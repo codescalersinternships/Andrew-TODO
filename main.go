@@ -37,6 +37,7 @@ func (app *App) addTodoHandler(context *gin.Context) {
 	err := app.model.addTodo(new_todo_item)
 	if err == nil {
 		context.IndentedJSON(http.StatusCreated, gin.H{"message": "todo is added succesfully"})
+		return
 	}
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
@@ -90,12 +91,15 @@ func (app *App) updateTodoHandler(context *gin.Context) {
 	err3 := app.model.updateTodo(updated_todo.ID, item)
 	if err3 == nil {
 		context.IndentedJSON(http.StatusCreated, gin.H{"message": "item is updated succesfully"})
+		return
 	}
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
 func middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("this is custom middleware")
+		fmt.Printf("request method : %s \nrequest host: %s\n ",
+			c.Request.Method, c.Request.Host)
 		c.Next()
 	}
 }
