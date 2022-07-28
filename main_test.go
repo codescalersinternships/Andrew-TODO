@@ -12,7 +12,7 @@ import (
 )
 
 func SetUpRouter() *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
 	return router
 }
 
@@ -28,7 +28,7 @@ func TestAddTodo(t *testing.T) {
 	file := MakeTempFile(t)
 	defer os.Remove(file)
 	var app App
-	app.model.GetConnection(file)
+	app.model.getConnection(file)
 	app.model.addTodo("first todo")
 	app.model.addTodo("second todo")
 
@@ -66,7 +66,7 @@ func TestGetTodo(t *testing.T) {
 	file := MakeTempFile(t)
 	defer os.Remove(file)
 	var app App
-	app.model.GetConnection(file)
+	app.model.getConnection(file)
 	app.model.addTodo("first todo")
 	app.model.addTodo("second todo")
 	t.Run("testing get todo  (OK) with valid id", func(t *testing.T) {
@@ -109,7 +109,7 @@ func TestDeleteTodo(t *testing.T) {
 	file := MakeTempFile(t)
 	defer os.Remove(file)
 	var app App
-	app.model.GetConnection(file)
+	app.model.getConnection(file)
 	app.model.addTodo("first todo")
 	app.model.addTodo("second todo")
 	t.Run("testing delete todo  (Ok) with valid id", func(t *testing.T) {
@@ -151,7 +151,7 @@ func TestUpdateTodo(t *testing.T) {
 	file := MakeTempFile(t)
 	defer os.Remove(file)
 	var app App
-	app.model.GetConnection(file)
+	app.model.getConnection(file)
 	app.model.addTodo("first todo")
 	app.model.addTodo("second todo")
 	t.Run("testing update todo  (ok) with valid", func(t *testing.T) {

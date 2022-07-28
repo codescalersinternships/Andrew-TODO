@@ -95,7 +95,7 @@ func (app *App) updateTodoHandler(context *gin.Context) {
 	}
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
-func middleware() gin.HandlerFunc {
+func MiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("this is custom middleware")
 		fmt.Printf("request method : %s \nrequest host: %s\n ",
@@ -105,9 +105,9 @@ func middleware() gin.HandlerFunc {
 }
 func main() {
 	app := App{}
-	app.model.GetConnection(DBFILE)
+	app.model.getConnection(DBFILE)
 	router := gin.New()
-	router.Use(middleware())
+	router.Use(MiddleWare())
 	router.GET("/todos", app.getTodosHandler)
 	router.GET("/todos/:id", app.getTodoHandler)
 	router.POST("/todos", app.addTodoHandler)

@@ -18,7 +18,7 @@ type Model struct {
 	db *gorm.DB
 }
 
-func (m *Model) GetConnection(file string) {
+func (m *Model) getConnection(file string) {
 	var err error
 	m.db, err = gorm.Open(sqlite.Open(file), &gorm.Config{})
 	if err != nil {
