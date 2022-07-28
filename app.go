@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -21,7 +22,8 @@ func (m *Model) GetConnection(file string) {
 	var err error
 	m.db, err = gorm.Open(sqlite.Open(file), &gorm.Config{})
 	if err != nil {
-		panic("couldn't connect to database")
+		errstr := fmt.Sprintf("couldnt connect to database in this file: %s\n ERROR: %s", file, err)
+		panic(errstr)
 	}
 	m.db.AutoMigrate(&Todo{})
 }
