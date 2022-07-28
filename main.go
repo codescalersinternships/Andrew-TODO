@@ -38,9 +38,9 @@ func (app *App) addTodoHandler(context *gin.Context) {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "item cannot be empty"})
 		return
 	}
-	err := app.model.addTodo(new_todo_item)
+	todo, err := app.model.addTodo(new_todo_item)
 	if err == nil {
-		context.IndentedJSON(http.StatusCreated, gin.H{"message": "todo is added succesfully"})
+		context.IndentedJSON(http.StatusCreated, todo)
 		return
 	}
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})

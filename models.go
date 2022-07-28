@@ -43,11 +43,11 @@ func (m *Model) deleteTodo(id int) error {
 	return nil
 }
 
-func (m *Model) addTodo(new_todo_string string) error {
+func (m *Model) addTodo(new_todo_string string) (Todo, error) {
 	var new_todo Todo
 	new_todo.Item = new_todo_string
 	res := m.db.Create(&new_todo)
-	return res.Error
+	return new_todo, res.Error
 }
 
 func (m *Model) getTodos() ([]Todo, error) {
