@@ -1,217 +1,196 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "description": "this is ToDo API project",
-      "version": "1.0.0",
-      "title": "TODO"
-    },
-    "host": "localhost:8080",
-    "basePath": "/",
-    "tags": [
-      {
-        "name": "todos",
-        "description": "Everything about todos"
-      }
-    ],
-    "schemes": [
-      "http"
-    ],
-    "paths": {
-      "/todos": {
-        "get": {
-          "tags": [
-            "todos"
-          ],
-          "summary": "get all todos",
-          "operationId": "get_all_todos",
-          "consumes": [
-            "application/json"
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            }
-          }
-        },
-        "post": {
-          "tags": [
-            "todos"
-          ],
-          "summary": "add a new item to the todo list",
-          "operationId": "create_new_todo",
-          "parameters": [
-            {
-              "description": "todo data",
-              "in": "body",
-              "name": "data",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "201": {
-              "description": "todo is sucessfult created"
-            },
-            "400": {
-              "description": "Bad Request"
-            }
+  "swagger": "2.0",
+  "info": {
+    "description": "this is ToDo API project",
+    "version": "1.0.0",
+    "title": "TODO"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "todos",
+      "description": "Everything about todos"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/todos": {
+      "get": {
+        "tags": [
+          "todos"
+        ],
+        "summary": "get all todos",
+        "operationId": "get_all_todos",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "202": {
+            "description": "status accepted"
+          },
+          "500": {
+            "description": "internal server error"
           }
         }
       },
-      "/todos/{id}": {
-        "delete": {
-          "tags": [
-            "todos"
-          ],
-          "summary": "delete a todo item by ID",
-          "operationId": "delete_todo",
-          "parameters": [
-            {
-              "description": "todo ID",
-              "in": "path",
-              "name": "id",
-              "required": true,
-              "type": "integer"
-            }
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "400": {
-              "description": "Bad Request entered id is not a string"
-            },
-            "404": {
-              "description": "Not Found"
+      "post": {
+        "tags": [
+          "todos"
+        ],
+        "summary": "add a new item to the todo list",
+        "operationId": "create_new_todo",
+        "parameters": [
+          {
+            "description": "todo data",
+            "in": "body",
+            "name": "data",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
-        },
-        "get": {
-          "tags": [
-            "todos"
-          ],
-          "summary": "get a todo item by ID",
-          "operationId": "get_todo",
-          "parameters": [
-            {
-              "description": "todo ID",
-              "in": "path",
-              "name": "id",
-              "required": true,
-              "type": "integer"
-            }
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "400": {
-              "description": "Bad Request entered id is not a string"
-            },
-            "404": {
-              "description": "Not Found"
-            }
-          }
-        },
-        "patch": {
-          "tags": [
-            "todos"
-          ],
-          "summary": "toggle todo completed attribute",
-          "operationId": "toggle_todo",
-          "parameters": [
-            {
-              "description": "todo ID",
-              "in": "path",
-              "name": "id",
-              "required": true,
-              "type": "integer"
-            }
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "400": {
-              "description": "Bad Request entered id is not a string"
-            },
-            "404": {
-              "description": "Not Found"
-            }
-          }
-        },
-        "put": {
-          "tags": [
-            "todos"
-          ],
-          "summary": "update todo item",
-          "operationId": "update_todo",
-          "parameters": [
-            {
-              "description": "todo ID",
-              "in": "path",
-              "name": "id",
-              "required": true,
-              "type": "integer"
-            },
-            {
-              "description": "todo data",
-              "in": "body",
-              "name": "data",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "200": {
-              "description": "OK"
-            },
-            "400": {
-              "description": "Bad Request entered id is not a string"
-            },
-            "404": {
-              "description": "Not Found"
-            }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "todo is sucessfult created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "internal server error"
           }
         }
       }
     },
-    "definitions": {
-      "todo": {
-        "type": "object",
-        "properties": {
-          "id": {
+    "/todos/{id}": {
+      "delete": {
+        "tags": [
+          "todos"
+        ],
+        "summary": "delete a todo item by ID",
+        "operationId": "delete_todo",
+        "parameters": [
+          {
+            "description": "todo ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "No response"
+          },
+          "400": {
+            "description": "Bad Request entered id is not a string"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "todos"
+        ],
+        "summary": "get a todo item by ID",
+        "operationId": "get_todo",
+        "parameters": [
+          {
+            "description": "todo ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "202": {
+            "description": "accepted"
+          },
+          "400": {
+            "description": "Bad Request entered id is not a string"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "todos"
+        ],
+        "summary": "update todo item",
+        "operationId": "update_todo",
+        "parameters": [
+          {
+            "description": "todo ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
             "type": "integer"
           },
-          "item": {
-            "type": "string"
+          {
+            "description": "todo data",
+            "in": "body",
+            "name": "data",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "created"
           },
-          "completed": {
-            "type": "boolean"
+          "400": {
+            "description": "Bad Request entered id is not a string"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "internal server error"
           }
         }
       }
     }
+  },
+  "definitions": {
+    "todo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "item": {
+          "type": "string"
+        },
+        "completed": {
+          "type": "boolean"
+        }
+      }
+    }
   }
+}

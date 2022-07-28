@@ -17,10 +17,10 @@ func (app *App) getTodosHandler(context *gin.Context) {
 	var all_todos []Todo
 	all_todos, err := app.model.getTodos()
 	if err == nil {
-		context.IndentedJSON(http.StatusOK, all_todos)
+		context.IndentedJSON(http.StatusAccepted, all_todos)
 		return
 	}
-	//must be error here
+	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 
 }
 
@@ -35,9 +35,9 @@ func (app *App) addTodoHandler(context *gin.Context) {
 	}
 	err := app.model.addTodo(new_todo_item)
 	if err == nil {
-		context.IndentedJSON(http.StatusOK, gin.H{"message": "todo is added succesfully"})
+		context.IndentedJSON(http.StatusCreated, gin.H{"message": "todo is added succesfully"})
 	}
-	// there should be error here
+	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
 
 func (app *App) getTodoHandler(context *gin.Context) {
@@ -53,7 +53,7 @@ func (app *App) getTodoHandler(context *gin.Context) {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
-	context.IndentedJSON(http.StatusOK, res_todo)
+	context.IndentedJSON(http.StatusAccepted, res_todo)
 }
 
 func (app *App) deleteTodoHandle(context *gin.Context) {
@@ -68,7 +68,7 @@ func (app *App) deleteTodoHandle(context *gin.Context) {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
-	context.IndentedJSON(http.StatusOK, gin.H{"message": "item is deleted succesfully"})
+	context.IndentedJSON(http.StatusNoContent, gin.H{"message": "item is deleted succesfully"})
 }
 
 func (app *App) updateTodoHandler(context *gin.Context) {
@@ -88,9 +88,9 @@ func (app *App) updateTodoHandler(context *gin.Context) {
 	}
 	err3 := app.model.updateTodo(updated_todo.ID, item)
 	if err3 == nil {
-		context.IndentedJSON(http.StatusOK, gin.H{"message": "item is updated succesfully"})
+		context.IndentedJSON(http.StatusCreated, gin.H{"message": "item is updated succesfully"})
 	}
-	//there should be error
+	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
 
 func main() {

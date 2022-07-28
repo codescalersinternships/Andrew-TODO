@@ -32,7 +32,7 @@ func TestAddTodo(t *testing.T) {
 	app.model.addTodo("first todo")
 	app.model.addTodo("second todo")
 
-	t.Run("testing add todo OK status ", func(t *testing.T) {
+	t.Run("testing add todo created status ", func(t *testing.T) {
 		router := SetUpRouter()
 		router.POST("/todos", app.addTodoHandler)
 		new_item := "this is new task"
@@ -41,8 +41,8 @@ func TestAddTodo(t *testing.T) {
 		response := httptest.NewRecorder()
 		router.ServeHTTP(response, req)
 		status := response.Code
-		if status != http.StatusOK {
-			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusOK)
+		if status != http.StatusCreated {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusCreated)
 		}
 	})
 
@@ -76,8 +76,8 @@ func TestGetTodo(t *testing.T) {
 		response := httptest.NewRecorder()
 		router.ServeHTTP(response, req)
 		status := response.Code
-		if status != http.StatusOK {
-			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusOK)
+		if status != http.StatusAccepted {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusAccepted)
 		}
 	})
 
@@ -119,8 +119,8 @@ func TestDeleteTodo(t *testing.T) {
 		response := httptest.NewRecorder()
 		router.ServeHTTP(response, req)
 		status := response.Code
-		if status != http.StatusOK {
-			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusNotFound)
+		if status != http.StatusNoContent {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusNoContent)
 		}
 	})
 	t.Run("testing delete todo  (bad request) with invalid id", func(t *testing.T) {
@@ -163,8 +163,8 @@ func TestUpdateTodo(t *testing.T) {
 		response := httptest.NewRecorder()
 		router.ServeHTTP(response, req)
 		status := response.Code
-		if status != http.StatusOK {
-			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusOK)
+		if status != http.StatusCreated {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusCreated)
 		}
 	})
 	t.Run("testing update todo  (bad request) with invalid id", func(t *testing.T) {
