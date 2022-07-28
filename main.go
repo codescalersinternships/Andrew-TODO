@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -92,11 +93,17 @@ func (app *App) updateTodoHandler(context *gin.Context) {
 	}
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
-
+func middleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fmt.Println("this is custom middleware")
+		c.Next()
+	}
+}
 func main() {
 	app := App{}
 	app.model.GetConnection(DBFILE)
-	router := gin.Default()
+	router := gin.New()
+	router.Use(middleware())
 	router.GET("/todos", app.getTodosHandler)
 	router.GET("/todos/:id", app.getTodoHandler)
 	router.POST("/todos", app.addTodoHandler)
