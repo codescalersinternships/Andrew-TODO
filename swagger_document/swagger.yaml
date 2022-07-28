@@ -22,8 +22,8 @@ paths:
       produces:
       - "application/json"
       responses:
-        "202":
-          description: "status accepted"
+        "200":
+          description: "ok"
         "500":
           description: "internal server error"
     post:
@@ -84,8 +84,8 @@ paths:
       produces:
       - "application/json"
       responses:
-        "202":
-          description: "accepted"
+        "200":
+          description: "ok"
         "404":
           description: "Not Found"
         "400" :
@@ -112,8 +112,8 @@ paths:
       produces:
       - "application/json"
       responses:
-        "201":
-          description: "created"
+        "202":
+          description: "Accepted"
         "404":
           description: "Not Found"
         "400" :

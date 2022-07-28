@@ -76,7 +76,7 @@ func TestGetTodo(t *testing.T) {
 		response := httptest.NewRecorder()
 		router.ServeHTTP(response, req)
 		status := response.Code
-		if status != http.StatusAccepted {
+		if status != http.StatusOK {
 			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusAccepted)
 		}
 	})
@@ -163,8 +163,8 @@ func TestUpdateTodo(t *testing.T) {
 		response := httptest.NewRecorder()
 		router.ServeHTTP(response, req)
 		status := response.Code
-		if status != http.StatusCreated {
-			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusCreated)
+		if status != http.StatusAccepted {
+			t.Errorf("Returned Wrong status code: got %v want %v", status, http.StatusAccepted)
 		}
 	})
 	t.Run("testing update todo  (bad request) with invalid id", func(t *testing.T) {

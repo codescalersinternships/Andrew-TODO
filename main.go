@@ -14,11 +14,15 @@ type App struct {
 	model Model
 }
 
+func (app *App) CreateApp(file string) {
+	app.model.getConnection(file)
+}
+
 func (app *App) getTodosHandler(context *gin.Context) {
 	var all_todos []Todo
 	all_todos, err := app.model.getTodos()
 	if err == nil {
-		context.IndentedJSON(http.StatusAccepted, all_todos)
+		context.IndentedJSON(http.StatusOK, all_todos)
 		return
 	}
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
@@ -55,7 +59,7 @@ func (app *App) getTodoHandler(context *gin.Context) {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
-	context.IndentedJSON(http.StatusAccepted, res_todo)
+	context.IndentedJSON(http.StatusOK, res_todo)
 }
 
 func (app *App) deleteTodoHandle(context *gin.Context) {
@@ -90,7 +94,7 @@ func (app *App) updateTodoHandler(context *gin.Context) {
 	}
 	err3 := app.model.updateTodo(updated_todo.ID, item)
 	if err3 == nil {
-		context.IndentedJSON(http.StatusCreated, gin.H{"message": "item is updated succesfully"})
+		context.IndentedJSON(http.StatusAccepted, gin.H{"message": "item is updated succesfully"})
 		return
 	}
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
@@ -105,7 +109,7 @@ func MiddleWare() gin.HandlerFunc {
 }
 func main() {
 	app := App{}
-	app.model.getConnection(DBFILE)
+	app.CreateApp(DBFILE)
 	router := gin.New()
 	router.Use(MiddleWare())
 	router.GET("/todos", app.getTodosHandler)
