@@ -60,3 +60,8 @@ func (m *Model) updateTodo(id int, todo_item string) error {
 	res := m.db.Model(&Todo{}).Where("id = ?", id).Update("item", todo_item)
 	return res.Error
 }
+
+func (m *Model) toggleTodo(id int, toggeled_todo Todo) error {
+	res := m.db.Model(&Todo{}).Where("id = ?", id).Update("completed", !toggeled_todo.Completed)
+	return res.Error
+}
