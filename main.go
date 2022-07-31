@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
+	middlewaree "TO_DO_PROJECT/middleware"
 	"net/http"
 	"strconv"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -99,22 +100,40 @@ func (app *App) updateTodoHandler(context *gin.Context) {
 	}
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
-func MiddleWare() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		fmt.Println("this is custom middleware")
-		fmt.Printf("request method : %s \nrequest host: %s\n ",
-			c.Request.Method, c.Request.Host)
-		c.Next()
+
+func (app *App) toggleTodoHandler(context *gin.Context) {
+	id_s := context.Param("id")
+	id, err := strconv.Atoi(id_s)
+	if err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad request id should be num"})
 	}
+	togeled_todo, err2 := app.model.getTodo(id)
+	if err2 != nil {
+		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
+		return
+	}
+	err3 := app.model.toggleTodo(id, togeled_todo)
+	if err3 == nil {
+		context.IndentedJSON(http.StatusAccepted, gin.H{"message": "item is toggeled succesfully"})
+		return
+	}
+	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
+
 func main() {
 	app := App{}
 	app.CreateApp(DBFILE)
 	router := gin.New()
-	router.Use(MiddleWare())
+	router.Use(cors.New(cors.Config{
+		AllowHeaders: []string{"Content-Type", "Access-Control-Allow-Origin"},
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"PUT", "DELETE", "GET", "POST", "PATCH"},
+	}))
+	router.Use(middlewaree.MiddleWare())
 	router.GET("/todos", app.getTodosHandler)
 	router.GET("/todos/:id", app.getTodoHandler)
 	router.POST("/todos", app.addTodoHandler)
+	router.PATCH("/todos/:id", app.toggleTodoHandler)
 	router.DELETE("/todos/:id", app.deleteTodoHandle)
 	router.PUT("/todos/:id", app.updateTodoHandler)
 	router.Static("/swaggerui/", "swagger_ui")
