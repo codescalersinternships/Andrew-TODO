@@ -9,7 +9,10 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+    
     steps:
+      - name: run project backend
+        run: go run .
       - name: Checkout
         uses: actions/checkout@v3
       - name: run project frontend
