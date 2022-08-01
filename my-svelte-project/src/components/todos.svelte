@@ -155,26 +155,26 @@ const add_todo_api = async (item) => {
       </h2>
       <input bind:value={newTodoItem}  type="text" id="todo-0" autocomplete="off"
         class="input input__lg" />
-      <button type="submit" disabled="" class="btn btn__primary btn__lg">
+      <button id="btn1" type="submit" disabled="" class="btn btn__primary btn__lg">
         Add
       </button>
     </form>
   
     <!-- Filter -->
     <div class="filters btn-group stack-exception">
-      <button class="btn toggle-btn" class:btn__primary={filter === 'all'} 
+      <button id="btn2" class="btn toggle-btn" class:btn__primary={filter === 'all'} 
               aria-pressed={filter === 'all'} on:click={() => filter = 'all'}>
         <span class="visually-hidden">Show</span>
         <span>All</span>
         <span class="visually-hidden">tasks</span>
       </button>
-      <button class="btn toggle-btn" class:btn__primary={filter === 'active'} 
+      <button id="btn3" class="btn toggle-btn" class:btn__primary={filter === 'active'} 
               aria-pressed={filter === 'active'}  on:click={() => filter = 'active'}>
         <span class="visually-hidden">Show</span>
         <span>Active</span>
         <span class="visually-hidden">tasks</span>
       </button>
-      <button class="btn toggle-btn" class:btn__primary={filter === 'completed'} 
+      <button id="btn4" class="btn toggle-btn" class:btn__primary={filter === 'completed'} 
       aria-pressed={filter === 'completed'} on:click={() => filter = 'completed'}>
         <span class="visually-hidden">Show</span>
         <span>Completed</span>
@@ -196,10 +196,10 @@ const add_todo_api = async (item) => {
           <input bind:value={edited_item} type="text" id="todo-{edit_todo_id}" autoComplete="off" class="todo-text" />
         </div>
         <div class="btn-group">
-          <button class="btn todo-cancel" on:click={on_cancel} type="button">
+          <button id="btn5"  class="btn todo-cancel" on:click={on_cancel} type="button">
             Cancel<span class="visually-hidden">renaming {edit_todo_item}</span>
             </button>
-          <button class="btn btn__primary todo-edit" on:click={on_save(edit_todo_id)} type="submit" disabled={!edited_item}>
+          <button id="btn6" class="btn btn__primary todo-edit" on:click={on_save(edit_todo_id)} type="submit" disabled={!edited_item}>
             Save<span class="visually-hidden">new item for {edit_todo_item}</span>
           </button>
         </div>
@@ -219,10 +219,10 @@ const add_todo_api = async (item) => {
             </label>
           </div>
           <div class="btn-group">
-            <button type="button" class="btn" on:click={on_edit(todo.ID , todo.Item)}>
+            <button id="btn7"  type="button" class="btn" on:click={on_edit(todo.ID , todo.Item)}>
               Edit <span class="visually-hidden">{todo.Item}</span>
             </button>
-            <button type="button" class="btn btn__danger"
+            <button id="btn8" type="button" class="btn btn__danger"
              on:click={() => removeTodo(todo)}>
               Delete <span class="visually-hidden">{todo.Item}</span>
             </button>
@@ -239,9 +239,9 @@ const add_todo_api = async (item) => {
   </ul>
     <!-- MoreActions -->
   <div class="btn-group">
-    <button type="button" class="btn btn__primary"
+    <button id="btn9" type="button" class="btn btn__primary"
     on:click={() => check_all_todos()}   >Check all</button>
-    <button type="button" class="btn btn__primary"
+    <button id="btn10" type="button" class="btn btn__primary"
       on:click={() => remove_completed_todos()} >Remove completed</button>
   </div>
 
