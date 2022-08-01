@@ -40,7 +40,7 @@ const add_todo_api = async (item) => {
 		}
 	};   
 
-  const toggle_todo_api = async (id) => {
+  const update_todo_status_api = async (id) => {
 		try {
       const res = await axios.patch('http://localhost:8080/todos/'+ id);
 			console.log("should be togeled")
@@ -80,7 +80,7 @@ const add_todo_api = async (item) => {
       for (let i = 0; i < todos.length; i++) {
          if (!todos[i].Completed){
             todos[i].Completed = true
-             toggle_todo_api(todos[i].ID)
+             update_todo_status_api(todos[i].ID)
            } 
     }
 	};  
@@ -211,7 +211,7 @@ const add_todo_api = async (item) => {
     <li class="todo" id= "list2"  >
       <div class="stack-small">  
           <div class="c-cb">
-            <input  type="checkbox"  on:click = {toggle_todo_api(todo.ID)} id="todo-check-{todo.ID}" 
+            <input  type="checkbox"  on:click = {update_todo_status_api(todo.ID)} id="todo-check-{todo.ID}" 
             on:click={() => todo.Completed = !todo.Completed}
             checked={todo.Completed}/>
             <label for="todo-{todo.ID}" id="todo-text-{todo.ID}" class="todo-label">

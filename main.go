@@ -117,7 +117,7 @@ func (app *App) updateTodoStatusHandler(context *gin.Context) {
 		context.IndentedJSON(http.StatusNotFound, gin.H{"message": "todo not found"})
 		return
 	}
-	err3 := app.model.toggleTodo(id, togeled_todo)
+	err3 := app.model.updateTodoStatus(id, togeled_todo)
 	if err3 == nil {
 		context.IndentedJSON(http.StatusAccepted, gin.H{"message": "item is toggeled succesfully"})
 		return

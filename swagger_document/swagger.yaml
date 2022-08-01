@@ -120,6 +120,28 @@ paths:
           description: "Bad Request entered id is not a string"
         "500" :
           description: "internal server error"
+    patch:
+      tags:
+        - "todos"
+      summary: "update todo status item"
+      operationId: "update_todo_status"
+      parameters:
+      - description: "todo ID"
+        in: "path"
+        name: "id"
+        required: true
+        type: "integer"
+      produces:
+      - "application/json"
+      responses:
+        "202":
+          description: "Accepted"
+        "404":
+          description: "Not Found"
+        "400" :
+          description: "Bad Request entered id is not a string"
+        "500" :
+          description: "internal server error"    
 definitions:
   todo:
     type: "object"
