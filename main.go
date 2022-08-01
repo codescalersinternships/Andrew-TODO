@@ -106,7 +106,7 @@ func (app *App) updateTodoHandler(context *gin.Context) {
 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "database error"})
 }
 
-func (app *App) toggleTodoHandler(context *gin.Context) {
+func (app *App) updateTodoStatusHandler(context *gin.Context) {
 	id_s := context.Param("id")
 	id, err := strconv.Atoi(id_s)
 	if err != nil {
@@ -153,7 +153,7 @@ func main() {
 	router.GET("/todos", app.getTodosHandler)
 	router.GET("/todos/:id", app.getTodoHandler)
 	router.POST("/todos", app.addTodoHandler)
-	router.PATCH("/todos/:id", app.toggleTodoHandler)
+	router.PATCH("/todos/:id", app.updateTodoStatusHandler)
 	router.DELETE("/todos/:id", app.deleteTodoHandle)
 	router.PUT("/todos/:id", app.updateTodoHandler)
 	router.Static("/swaggerui/", "swagger_ui")

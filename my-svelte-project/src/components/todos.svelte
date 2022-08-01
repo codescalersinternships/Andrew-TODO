@@ -186,20 +186,20 @@ const add_todo_api = async (item) => {
     <h2 id="list-heading">{completedTodos} out of {totalTodos} items completed</h2>
   
   <!-- To-dos -->
-<ul role="list" class="todo-list stack-large" aria-labelledby="list-heading">
+<ul role="list" id= "list1" class="todo-list stack-large" aria-labelledby="list-heading">
   {#if editing}
   <li class="todo">
     <div class="stack-small">  
       <form on:submit|preventDefault={on_save} class="stack-small" on:keydown={(e) => e.key === 'Escape' && on_cancel()}>
         <div class="form-group">
           <label for="todo-{edit_todo_id}" class="todo-label">New item for '{edit_todo_item}'</label>
-          <input bind:value={edited_item} type="text" id="todo-{edit_todo_id}" autoComplete="off" class="todo-text" />
+          <input bind:value={edited_item} type="text" id="todo-edit-{edit_todo_id}" autoComplete="off" class="todo-text" />
         </div>
         <div class="btn-group">
-          <button id="btn5"  class="btn todo-cancel" on:click={on_cancel} type="button">
+          <button id="btn5-{edit_todo_id}"  class="btn todo-cancel" on:click={on_cancel} type="button">
             Cancel<span class="visually-hidden">renaming {edit_todo_item}</span>
             </button>
-          <button id="btn6" class="btn btn__primary todo-edit" on:click={on_save(edit_todo_id)} type="submit" disabled={!edited_item}>
+          <button id="btn6-{edit_todo_id}" class="btn btn__primary todo-edit" on:click={on_save(edit_todo_id)} type="submit" disabled={!edited_item}>
             Save<span class="visually-hidden">new item for {edit_todo_item}</span>
           </button>
         </div>
@@ -208,21 +208,21 @@ const add_todo_api = async (item) => {
   </li>
   {:else} 
     {#each filterTodos(filter , todos) as todo (todo.ID)} 
-    <li class="todo">
+    <li class="todo" id= "list2"  >
       <div class="stack-small">  
           <div class="c-cb">
-            <input  type="checkbox"  on:click = {toggle_todo_api(todo.ID)} id="todo-{todo.ID}" 
+            <input  type="checkbox"  on:click = {toggle_todo_api(todo.ID)} id="todo-check-{todo.ID}" 
             on:click={() => todo.Completed = !todo.Completed}
             checked={todo.Completed}/>
-            <label for="todo-{todo.ID}" class="todo-label">
+            <label for="todo-{todo.ID}" id="todo-text-{todo.ID}" class="todo-label">
               {todo.Item}
             </label>
           </div>
           <div class="btn-group">
-            <button id="btn7"  type="button" class="btn" on:click={on_edit(todo.ID , todo.Item)}>
+            <button id="btn7-{todo.ID}"  type="button" class="btn" on:click={on_edit(todo.ID , todo.Item)}>
               Edit <span class="visually-hidden">{todo.Item}</span>
             </button>
-            <button id="btn8" type="button" class="btn btn__danger"
+            <button id="btn8-{todo.ID}" type="button" class="btn btn__danger"
              on:click={() => removeTodo(todo)}>
               Delete <span class="visually-hidden">{todo.Item}</span>
             </button>
