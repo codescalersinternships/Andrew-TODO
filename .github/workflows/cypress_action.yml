@@ -1,0 +1,24 @@
+name: cypress test
+
+on:
+  push:
+    branches: [ "development" ]
+  pull_request:
+    branches: [ "development" ]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: run project backend
+        run: go run .
+      - name: run project frontend
+        run: cd my-svelte-project
+        run: npm run dev
+      - name: change to cypress file
+        run:  cd frontend_testing
+        run: npx cypress run
+
+        
