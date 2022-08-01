@@ -8,6 +8,6 @@ COPY . .
 
 
 RUN go build .
-VOLUME [ "/database" ]
+VOLUME ./database/todos.db
 EXPOSE 8080
 CMD ["./TO_DO_PROJECT"]

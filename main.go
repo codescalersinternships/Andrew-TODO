@@ -2,8 +2,13 @@ package main
 
 import (
 	middlewaree "TO_DO_PROJECT/middleware"
+	"context"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"strconv"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -124,11 +129,26 @@ func main() {
 	app := App{}
 	app.CreateApp(DBFILE)
 	router := gin.New()
+
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: router,
+	}
+
+	go func() {
+		// service connections
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+	log.Print("Server Started")
+
 	router.Use(cors.New(cors.Config{
 		AllowHeaders: []string{"Content-Type", "Access-Control-Allow-Origin"},
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{"PUT", "DELETE", "GET", "POST", "PATCH"},
 	}))
+
 	router.Use(middlewaree.MiddleWare())
 	router.GET("/todos", app.getTodosHandler)
 	router.GET("/todos/:id", app.getTodoHandler)
@@ -137,5 +157,18 @@ func main() {
 	router.DELETE("/todos/:id", app.deleteTodoHandle)
 	router.PUT("/todos/:id", app.updateTodoHandler)
 	router.Static("/swaggerui/", "swagger_ui")
-	router.Run(":8080")
+
+	// Wait for interrupt signal to gracefully shutdown the server with
+	// a timeout of 5 seconds.
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	log.Println("Shutdown Server ...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+	router.Run()
+
 }
