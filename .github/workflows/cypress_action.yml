@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: run project backend
-        run: go run .
       - name: run project frontend
         run: cd my-svelte-project
              npm run dev
