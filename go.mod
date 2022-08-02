@@ -1,4 +1,4 @@
-module TO_DO_PROJECT
+module to_do_project
 
 go 1.18
 

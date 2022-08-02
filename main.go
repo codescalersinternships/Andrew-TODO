@@ -1,7 +1,6 @@
 package main
 
 import (
-	middlewaree "TO_DO_PROJECT/middleware"
 	"context"
 	"log"
 	"net/http"
@@ -9,6 +8,7 @@ import (
 	"os/signal"
 	"strconv"
 	"time"
+	middlewaree "to_do_project/middleware"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
